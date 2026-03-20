@@ -75,12 +75,11 @@ PRODUCT_PACKAGES += \
     audio.bluetooth.default \
 
 # Camera
+$(call soong_config_set_bool,samsungCameraVars,needs_sec_reserved_field,true)
+$(call soong_config_set,samsungCameraVars,extra_ids,54,52) # ID=54 is macro and ID=52 is depth
+
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider-service_32.samsung \
-
-# Charger
-PRODUCT_PACKAGES += \
-    vendor.lineage.fastcharge@1.0-service.samsung \
 
 # CNE
 PRODUCT_PACKAGES += \
@@ -147,10 +146,21 @@ PRODUCT_PACKAGES += \
     vendor.qti.hardware.display.allocator-service \
 
 # Health
+$(call soong_config_set,lineage_health,charging_control_charging_path,/sys/class/power_supply/battery/batt_slate_mode)
+$(call soong_config_set,lineage_health,charging_control_charging_enabled,0)
+$(call soong_config_set,lineage_health,charging_control_charging_disabled,1)
+$(call soong_config_set_bool,lineage_health,charging_control_supports_bypass,false)
+$(call soong_config_set,lineage_health,fast_charge_node,/sys/class/sec/switch/afc_disable)
+$(call soong_config_set,lineage_health,fast_charge_value_none,1)
+$(call soong_config_set,lineage_health,fast_charge_value_fast_charge,0)
+
 PRODUCT_PACKAGES += \
     android.hardware.health-service.samsung \
     android.hardware.health-service.samsung-recovery \
     vendor.lineage.health-service.default \
+
+# Include
+$(call soong_config_set,samsungVars,target_specific_header_path,$(LOCAL_PATH)/include)
 
 # IPACM
 PRODUCT_PACKAGES += \
@@ -162,6 +172,9 @@ PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.0-service.samsung \
 
 $(call soong_config_set,samsungVars,target_keymaster4_library,//vendor/samsung/a71-common:libskeymaster4device)
+
+# Libinit
+$(call soong_config_set,libinit,vendor_init_lib,//$(COMMON_PATH):libinit_sm7150)
 
 # Lights
 PRODUCT_PACKAGES += \
@@ -383,7 +396,7 @@ PRODUCT_BOOT_JARS += \
 
 # Touch
 PRODUCT_PACKAGES += \
-    vendor.lineage.touch@1.0-service.sm6150 \
+    vendor.lineage.touch-service.samsung \
 
 # USB
 PRODUCT_PACKAGES += \
@@ -391,6 +404,8 @@ PRODUCT_PACKAGES += \
     android.hardware.usb-service.samsung \
 
 # Vibrator
+$(call soong_config_set_bool,samsungVibratorVars,duration_amplitude,false)
+
 PRODUCT_PACKAGES += \
     android.hardware.vibrator-service.samsung \
 
